@@ -3,11 +3,14 @@ from typing import List, Dict
 
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
-
+from fastapi.staticfiles import StaticFiles
 
 from my_data_classes import User, Subject
 
 app = FastAPI()
+
+# css
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 known_users: Dict[int, User]
 

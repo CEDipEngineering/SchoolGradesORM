@@ -1,28 +1,18 @@
-<head>
-    <style>
-        body {
-          background-color: rgb(214, 208, 202);
-          margin-left: 10px;
-
-        }
-        li{
-            font-size: large;
-        }
-        p{
-            font-size: large;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <form action="/[ID_USUÁRIO]" method="post">
-        <p>Nome da disciplina:</p>
-        <input type="text" name="nameSubject" required>
-        </br>
-        <p>Professor:</p>
-        <input type="text" name="professorName">
-        </br>
-        <input type="hidden" name="idSubject" value="[ID_NOVO]">
-        <input type="submit">  
-    </form>
-</body> 
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="/static/css/main.css" rel="stylesheet">
+    </head>
+    <body>
+        <form action="/[ID_USUÁRIO]" method="post">
+            <p>Nome da disciplina:</p>
+            <input type="text" name="nameSubject" required>
+            </br>
+            <p>Professor:</p>
+            <input type="text" name="professorName">
+            </br>
+            <input type="hidden" name="idSubject" value="[ID_NOVO]">
+            <input type="submit">  
+        </form>
+    </body> 
+</html>
