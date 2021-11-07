@@ -172,7 +172,7 @@ async def update_class(idUser: int, idSubject: int = Form(...), subject_name: st
         return RedirectResponse(url=f"/update/?{idUser=}&{idSubject=}",status_code=302)
     subject.nameSubject = subject_name
     subject.professorName = professor_name
-    user.notes[idSubject] = notes.copy()
+    user.notes[idSubject] = [n for n in notes if (n is not None and n.strip() != "")] # Copia só os não nulos
     return RedirectResponse(url=f"/{idUser}",status_code=302)
  
 # DELETE, só que não
