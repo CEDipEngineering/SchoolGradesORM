@@ -165,8 +165,8 @@ async def update_class(idUser: int, idSubject: int = Form(...), subject_name: st
     
     user = known_users[idUser]
     subject = user.classList[[i.idSubject for i in user.classList].index(idSubject)]
-    if subject_name in [i.nameSubject for i in known_users[idUser].classList]:
-        return RedirectResponse(url=f"/update/{idUser}",status_code=302)
+    if subject_name in [i.nameSubject for i in known_users[idUser].classList if i.idSubject != idSubject]:
+        return RedirectResponse(url=f"/update/?{idUser=}&{idSubject=}",status_code=302)
     subject.nameSubject = subject_name
     subject.professorName = professor_name
     user.notes[idSubject] = notes.copy()
