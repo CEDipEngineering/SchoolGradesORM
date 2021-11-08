@@ -71,16 +71,16 @@ async def get_root(idUser: int):
     structured_response+= "<p> Disciplinas </p>"
     structured_response+= "<ul>"
     for disc in known_users[idUser].classList:
-        structured_response+= f"""<li> {disc.nameSubject} </li> 
+        structured_response+= f"""<div id ='materias'><li> {disc.nameSubject} </li> 
                                     <form action='/delete_class/{idUser}' method='post'>
-                                        <input type='submit' value='X'>
+                                        <input type='submit' value='Delete'>
                                         <input type='hidden' value={disc.idSubject} name='idSubject'>
                                     </form>
                                     <form action='/update/' method='get'>
-                                        <input type='submit' value='...'>
+                                        <input type='submit' value='Edit'>
                                         <input type='hidden' value={disc.idSubject} name='idSubject'>
                                         <input type='hidden' value={idUser} name='idUser'>
-                                    </form>
+                                    </form></div>
                                 """
         structured_response+= "<ul>"
         for note in known_users[idUser].notes[disc.idSubject]:
@@ -88,7 +88,7 @@ async def get_root(idUser: int):
         structured_response+= "</ul>"
     structured_response+= "</ul>"
 
-    structured_response += f"<form action='/create/{idUser}' method='get'><input type='submit' value='Add'></form>"
+    structured_response += f"<div id = 'add'><form action='/create/{idUser}' method='get'><input type='submit' value='Add'></form></div>"
 
     # Update html and send
     content = content.replace("[INSERT USER CONTENT HERE]", structured_response)    
