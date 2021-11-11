@@ -48,14 +48,6 @@ user_2 = User(
 
 known_users = {user_1.idUser:user_1, user_2.idUser:user_2}
 
-# @app.post("/")
-# async def create_files(files: List[bytes] = File(...)):
-#     return {"file_sizes": [len(file) for file in files]}
-
-# @app.delete("/")
-# async def create_upload_files(files: List[UploadFile] = File(...)):
-#     return {"filenames": [file.filename for file in files]}
-
 @app.get("/{idUser}")
 async def get_root(idUser: int):
     fn = "index.html"

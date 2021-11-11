@@ -1,6 +1,6 @@
 USE Notas;
 DROP TABLE IF EXISTS User_has_Class;
-DROP TABLE IF EXISTS Grade;
+DROP TABLE IF EXISTS Note;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS Class;
 
@@ -19,21 +19,20 @@ CREATE TABLE User_has_Class (
 CREATE TABLE Class (
 	idClass INT NOT NULL AUTO_INCREMENT,
     nameClass VARCHAR(45) NOT NULL,
-    Notes TEXT(200),
     Professor VARCHAR(45),
     PRIMARY KEY (idClass)
 );
 
-CREATE TABLE Grade (
-    idGrade INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE Note (
+    idNote INT NOT NULL AUTO_INCREMENT,
     idUser INT NOT NULL,
     idClass INT NOT NULL,
-    nota DOUBLE,
-    PRIMARY KEY (idGrade)
+    nota TEXT(200),
+    PRIMARY KEY (idNote)
 );
 
 
 ALTER TABLE User_has_Class ADD FOREIGN KEY (idUser) REFERENCES User (idUser);
 ALTER TABLE User_has_Class ADD FOREIGN KEY (idClass) REFERENCES Class (idClass);
-ALTER TABLE Grade ADD FOREIGN KEY (idUser) REFERENCES User (idUser);
-ALTER TABLE Grade ADD FOREIGN KEY (idClass) REFERENCES Class (idClass);
+ALTER TABLE Note ADD FOREIGN KEY (idUser) REFERENCES User (idUser);
+ALTER TABLE Note ADD FOREIGN KEY (idClass) REFERENCES Class (idClass);

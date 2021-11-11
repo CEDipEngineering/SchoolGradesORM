@@ -1,23 +1,20 @@
-from typing import List, Dict
 from pydantic import BaseModel
 
-class Subject(BaseModel):
-    """
-    Subject that is beign undertaken by a student,
-    contains notes and possibly professor name.
-    nameSubject must be unique.
-    """
+class User (BaseModel):
+    idUser: int
+    nameUser: str
+
+class User_has_Class (BaseModel):
+    idUser: int
+    idClass: int
+
+class Class (BaseModel):
     idSubject: int
     nameSubject: str
     professorName: str
 
-class User(BaseModel):
-    """
-    User of application.
-    """
+class Note (BaseModel):
+    idNote: int
     idUser: int
-    nameUser: str
-    classList: List[Subject]
-    notes: Dict[int, List[str]]
-
-
+    idClass: int
+    nota: str
