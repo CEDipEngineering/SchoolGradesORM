@@ -9,9 +9,9 @@ class User_has_Class (BaseModel):
     idClass: int
 
 class Class (BaseModel):
-    idSubject: int
-    nameSubject: str
-    professorName: str
+    idClass: int
+    nameClass: str
+    Professor: str
 
 class Note (BaseModel):
     idNote: int
