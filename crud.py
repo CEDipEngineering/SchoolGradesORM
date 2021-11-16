@@ -28,16 +28,18 @@ def get_all_notes(db: Session, class_id: int, user_id: int):
     return queryRes
 
 def delete_class(db:Session, class_id: int):
-    db.query(User_has_Class).filter(User_has_Class.idClass == class_id).delete()
     db.query(Class).filter(Class.idClass == class_id).delete()
+    db.commit()
     return 1
 
 def delete_note(db:Session, note_id: int):
     db.query(Note).filter(Note.idNote == note_id).delete()
+    db.commit()
     return 1
 
 def update_note(db:Session, note_id: int, nota: str):
     db.query(Note).filter(Note.idNote == note_id).update({Note.nota:nota})
+    db.commit()
     return 1
 
 def create_note(db:Session, user_id: int, class_id: int, nota: str):

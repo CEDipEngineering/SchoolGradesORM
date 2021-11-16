@@ -158,6 +158,7 @@ async def update_class(idUser: int, idClass: int, db: SessionLocal = Depends(get
     resp += '<p>Nova anotação:</p>'
     resp += f'<input type="text" name="notes"></br>'
     
+    
     # Update html and send
     content = content.replace("[NOME DA DISCIPLINA]", f"{class_info[0].nameClass}")
     content = content.replace("[NOME DO PROFESSOR]", f"{class_info[0].Professor}")
@@ -240,27 +241,53 @@ async def update_class(idUser: int, idClass: int = Form(...), nameClass: str = F
 
     #def update_class(db:Session, class_id: int, new_name: str, new_prof:str):
 
+    all_ids = []
+    used_ids = []
     all_notes = crud.get_all_notes(db, idClass, idUser)
+    for n in all_notes:
+        all_ids.append(n.idNote)
     new_notes = [n for n in notes if (n is not None and n.strip() != "")] # Copia só os não nulos
-    if len(new_notes) != all_notes:
+    
+    if len(new_notes) > len(all_notes):
+        for i in range(len(all_notes)):
+            used_ids.append(all_notes[i].idNote)
+            crud.update_note(db, all_notes[i].idNote, new_notes[i])
+        
+    else:
+        for i in range(len(new_notes)):
+            used_ids.append(all_notes[i].idNote)
+            crud.update_note(db, all_notes[i].idNote, new_notes[i])
+
+    
+    diff_ids = list(set(all_ids) - set(used_ids))
+
+    if len(new_notes) > len(all_notes):
         crud.create_note(db, idUser, idClass, new_notes[-1])
-    for i in range(len(all_notes)):
-        crud.update_note(db, all_notes[i].idNote, new_notes[i])
+
+    for id in diff_ids:
+        crud.delete_note(db, id)
+
+
+    
 
 
     return RedirectResponse(url=f"/{idUser}",status_code=302)
  
 # DELETE, só que não
 @app.post("/delete_class/{idUser}")
-async def update_class(idUser: int, idSubject: int = Form(...), db: SessionLocal = Depends(get_db)):
-    if idUser not in known_users or idSubject not in [i.idSubject for i in user_info.classList]:
+async def update_class(idUser: int, idClass: int = Form(...), db: SessionLocal = Depends(get_db)):
+    print(idClass)
+    try:
+        user_info = crud.get_user(db, idUser) 
+        if user_info is None:
+            raise KeyNotFoundError
+    except Exception as e:
         fn = "error.html"
         with open(fn, "r", encoding="utf-8") as f:
             content = f.read()
-        return HTMLResponse(content=content) 
-    
-    user = user_info
-    user.classList.remove(user.classList[[i.idSubject for i in user_info.classList].index(idSubject)])
-    user.notes.pop(idSubject) # Memory leak warning, must remove here too
+        return HTMLResponse(content=content)
+
+
+    crud.delete_class(db, idClass)
 
     return RedirectResponse(url=f"/{idUser}",status_code=302)
