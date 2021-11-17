@@ -27,7 +27,14 @@ def get_all_notes(db: Session, class_id: int, user_id: int):
     queryRes = db.query(Note).filter(Note.idUser == user_id).filter(Note.idClass == class_id).all()
     return queryRes
 
-def delete_class(db:Session, class_id: int):
+def delete_class(db:Session, user_id: int, class_id: int):
+
+    # ON DELETE CASCADE RESOLVES:
+    # all_notes = get_all_notes(db, class_id, user_id)
+    # for note in all_notes:
+    #     delete_note(db, note.idNote)
+    # db.query(User_has_Class).filter(User_has_Class.idClass == class_id).delete()
+    
     db.query(Class).filter(Class.idClass == class_id).delete()
     db.commit()
     return 1
@@ -50,6 +57,7 @@ def create_note(db:Session, user_id: int, class_id: int, nota: str):
 
 def update_class(db:Session, class_id: int, new_name: str, new_prof:str):
     db.query(Class).filter(Class.idClass == class_id).update({Class.nameClass : new_name, Class.Professor : new_prof})
+    db.commit()
     return 1
 
 
@@ -57,8 +65,8 @@ def create_class(db:Session, name_class:str, professor_name:str, user_id:int):
     new_class =  Class(nameClass = name_class, Professor = professor_name)
     db.add(new_class)
     db.commit()
-    id_new_class = db.query(Class.idClass).order_by(desc(Class.idClass)).first()  #Not sure if works (works)
+    id_new_class = db.query(Class.idClass).order_by(desc(Class.idClass)).first()[0]  #Not sure if works (works)
     new_user_has_class = User_has_Class(idUser = user_id, idClass = id_new_class)
     db.add(new_user_has_class)
     db.commit()
-    return(new_class) 
+    return (new_class) 

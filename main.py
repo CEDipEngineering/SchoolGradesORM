@@ -1,17 +1,11 @@
-from os import name
-from typing import List, Dict
-
+from typing import List
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi import Depends, FastAPI, HTTPException
-
+from fastapi import Depends, FastAPI
 import crud
 import models
-import my_data_classes
 from database import SessionLocal, db_engine
-
-
 
 models.Base.metadata.create_all(bind=db_engine)
 
@@ -27,42 +21,6 @@ def get_db():
 
 # css
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# known_users: Dict[int, User]
-
-# subject_matvar = Subject(
-#     idSubject=1, 
-#     nameSubject= "MatVar",
-#     professorName= "Fábio Orfali"
-# )
-
-# subject_CDados = Subject(
-#     idSubject=2, 
-#     nameSubject= "Ciência de Dados",
-#     professorName= "Fábio Ayres"
-# )
-
-# subject_modsim = Subject(
-#     idSubject=3, 
-#     nameSubject= "ModSim",
-#     professorName= "Fábio Pelicano"
-# )
-
-# user_1 = User(
-#     idUser= 1,
-#     nameUser= "Bruce Banner",
-#     classList= [subject_matvar, subject_CDados],
-#     notes= {subject_matvar.idSubject:["5.6", "8.7", "Rodei na PF"], subject_CDados.idSubject:["10 - PI"]}
-# )
-
-# user_2 = User(
-#     idUser= 2,
-#     nameUser= "Tony Stark",
-#     classList= [subject_modsim],
-#     notes= {subject_modsim.idSubject:["9.2", "Ultron**"]}
-# )
-
-# known_users = {user_1.idUser:user_1, user_2.idUser:user_2}
 
 @app.get("/{idUser}")
 async def get_root(idUser: int, db: SessionLocal = Depends(get_db)):
@@ -182,7 +140,6 @@ async def create_class(idUser: int, db: SessionLocal = Depends(get_db)):
         return HTMLResponse(content=content)
 
     classes_info = crud.get_all_classes(db, idUser)
-
     
     with open(fn, "r", encoding="utf-8") as f:
         content = f.read()
@@ -205,7 +162,7 @@ async def post_new_class(idUser: int, nameClass: str = Form(...), professorName:
 
     all_classes = crud.get_all_classes(db, idUser)
     if nameClass.lower().strip() in [e.nameClass.lower().strip() for e in all_classes]:
-        RedirectResponse(url = f"/create/{idUser}", status_code = 302)
+        return RedirectResponse(url = f"/create/{idUser}", status_code = 302)
 
     crud.create_class(db, nameClass, professorName, idUser)
 
@@ -267,9 +224,7 @@ async def update_class(idUser: int, idClass: int = Form(...), nameClass: str = F
     for id in diff_ids:
         crud.delete_note(db, id)
 
-
-    
-
+    crud.update_class(db, idClass, nameClass, professor_name)
 
     return RedirectResponse(url=f"/{idUser}",status_code=302)
  
@@ -288,6 +243,6 @@ async def update_class(idUser: int, idClass: int = Form(...), db: SessionLocal =
         return HTMLResponse(content=content)
 
 
-    crud.delete_class(db, idClass)
+    crud.delete_class(db, idUser, idClass)
 
     return RedirectResponse(url=f"/{idUser}",status_code=302)
